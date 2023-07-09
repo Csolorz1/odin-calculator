@@ -1,7 +1,8 @@
+// Calculator UI
 const container = document.querySelector('#keys');
 const display = document.querySelector('#display')
 
-const ROWS = 4;
+const ROWS = 5;
 const COLUMNS = 4;
 container.style.setProperty('--grid-rows', ROWS);
 container.style.setProperty('--grid-cols', COLUMNS);
@@ -13,86 +14,208 @@ for (let i = 0; i < (ROWS * COLUMNS); i++) {
     container.appendChild(square);
 };
 
-// num keys 
-let num1 = document.getElementById('0');
-num1.innerHTML = '1';
-let num2 = document.getElementById('1');
-num2.innerHTML = '2';
-let num3 = document.getElementById('2');
-num3.innerHTML = '3';
-let num4 = document.getElementById('4');
-num4.innerHTML = '4';
-let num5 = document.getElementById('5');
-num5.innerHTML = '5';
-let num6 = document.getElementById('6');
-num6.innerHTML = '6';
-let num7 = document.getElementById('8');
-num7.innerHTML = '7';
-let num8 = document.getElementById('9');
-num8.innerHTML = '8';
-let num9 = document.getElementById('10');
-num9.innerHTML = '9';
-let num0 = document.getElementById('12');
-num0.innerHTML = '0';
-// operator keys
-let addKey = document.getElementById('3');
-addKey.innerHTML = '+';
-let subKey = document.getElementById('7');
-subKey.innerHTML = '-';
-let divKey = document.getElementById('11');
-divKey.innerHTML = '÷';
-let multKey = document.getElementById('15');
-multKey.innerHTML = 'x'
-let equalsKey = document.getElementById('13');
-equalsKey.innerHTML = '=';
-let clearKey = document.getElementById('14');
-clearKey.innerHTML = 'AC';
+// Key Mapping
 
-// Main operations
+// num keys 
+let para1 = document.getElementById('0');
+para1.innerHTML = '(';
+let para2 = document.getElementById('1');
+para2.innerHTML = ')';
+let delKey = document.getElementById('2');
+delKey.innerHTML = 'del';
+let clearKey = document.getElementById('3');
+clearKey.innerHTML = 'AC';
+let num7 = document.getElementById('4');
+num7.innerHTML = '7';
+let num8 = document.getElementById('5');
+num8.innerHTML = '8';
+let num9 = document.getElementById('6');
+num9.innerHTML = '9';
+let divKey = document.getElementById('7');
+divKey.innerHTML = '÷';
+let num4 = document.getElementById('8');
+num4.innerHTML = '4';
+let num5 = document.getElementById('9');
+num5.innerHTML = '5';
+let num6 = document.getElementById('10');
+num6.innerHTML = '6';
+let multKey = document.getElementById('11');
+multKey.innerHTML = 'x';
+let num1 = document.getElementById('12');
+num1.innerHTML = '1';
+let num2 = document.getElementById('13');
+num2.innerHTML = '2';
+let num3 = document.getElementById('14');
+num3.innerHTML = '3';
+let subKey = document.getElementById('15');
+subKey.innerHTML = '-';
+let num0 = document.getElementById('16');
+num0.innerHTML = '0';
+let decKey = document.getElementById('17');
+decKey.innerHTML = '.';
+let equalKey = document.getElementById('18');
+equalKey.innerHTML = '=';
+let addKey = document.getElementById('19');
+addKey.innerHTML = '+';
+
+// Calculator functionality
+
+// main operations
 function addition(a, b) {
-    return a + b;
+    var c = parseInt(a) + parseInt(b);
+    return c.toString();
 }
 function subtraction(a, b) {
-    return a - b;
+    var c = parseInt(a) - parseInt(b);
+    return c.toString();
 }
 function multiplication(a, b) {
-    return a * b;
+    var c = parseInt(a) * parseInt(b);
+    return c.toString();
 }
 function division(a, b) {
-    return a / b;
-}
-function operate(operation, a, b) {
-    //take main operation for id passed and pass a b to the selected operation
+    var c = parseInt(a) / parseInt(b);
+    return c.toString();
 }
 
-
-
-
-//id 0 1 2 4 5 6 8 9 10 12 correspond to number keys
-const numberKeys = [0, 1, 2, 4, 5, 6, 8, 9, 10, 12]
-//id 3 7 11 13 14 15 correspond to operator keys
-const operatorKeys = [3, 7, 11, 13, 14, 15];
-const equalKey = 13;
-
-const variableOne = 0;
-const variableTwo = 0;
-let operationID = 0;
-
-const squares = document.querySelectorAll('.key');
-squares.forEach((square) => {
-    square.addEventListener('click', () => {
-        if (numberKeys.find(Element => Element == square.id) != undefined) {
-            varOne = true;
-            display.innerHTML = 'Number key'
-        }
-        else if (square.id == equalKey) {
-            if (operationID != 0) {
-                //this means an operation key has been inputted
+// function to solve equations
+var operators = [];
+var variables = [];
+var search;
+var a;
+var b;
+var solution;
+function operate(operationString) {
+    var variable = "";
+    // seperate into variables and operators
+    for (let i = 0; i < operationString.length; i++) {
+        if (parseInt(operationString.charCodeAt(i)) >= 48) {
+            var num = operationString[i];
+            variable = variable.concat("", num);
+            if (i == operationString.length - 1) {
+                variables.push(variable);
             }
         }
         else {
-            operationID = square.id;
+            if (operationString.charCodeAt(i) != 32) {
+                variables.push(variable);
+                variable = "";
+                operators.push(operationString[i]);
+            }
         }
-        //display.innerHTML = square.id;
+    }
+    while (operators.length != 0) {
+        search = operators.indexOf('*');
+        if (search != -1) {
+            a = variables[search];
+            b = variables[search + 1];
+            solution = multiplication(a, b);
+            operators.splice(search, 1);
+            variables[search] = solution;
+            variables.splice(search + 1, 1);
+        }
+        search = operators.indexOf('/');
+        if (search != -1) {
+            a = variables[search];
+            b = variables[search + 1];
+            solution = division(a, b);
+            operators.splice(search, 1);
+            variables[search] = solution;
+            variables.splice(search + 1, 1);
+        }
+        search = operators.indexOf('+');
+        if (search != -1) {
+            a = variables[search];
+            b = variables[search + 1];
+            solution = addition(a, b);
+            operators.splice(search, 1);
+            variables[search] = solution;
+            variables.splice(search + 1, 1);
+        }
+        search = operators.indexOf('-');
+        if (search != -1) {
+            a = variables[search];
+            b = variables[search + 1];
+            solution = subtraction(a, b);
+            operators.splice(search, 1);
+            variables[search] = solution;
+            variables.splice(search + 1, 1);
+        }
+    }
+    solution = variables[0];
+    variables.pop();
+    return solution;
+}
+
+// Display functionality 
+
+let displayString = "";
+const squares = document.querySelectorAll('.key');
+squares.forEach((square) => {
+    square.addEventListener('click', () => {
+        switch(parseInt(square.id)) {
+            case 0:
+                displayString = displayString.concat("", '(');
+                break;
+            case 1:
+                displayString = displayString.concat("", ')');
+                break;
+            case 2:
+                displayString = displayString.concat("", ' WIP ');
+                break;
+            case 3:
+                displayString = "";
+                break;
+            case 4:
+                displayString = displayString.concat("", '7')
+                break;
+            case 5:
+                displayString = displayString.concat("", '8');
+                break;
+            case 6:
+                displayString = displayString.concat("", '9');
+                break;
+            case 7:
+                displayString = displayString.concat(" ", '/ ');
+                break;
+            case 8:
+                displayString = displayString.concat("", '4');
+                break;
+            case 9:
+                displayString = displayString.concat("", '5');
+                break;
+            case 10:
+                displayString = displayString.concat("", '6');
+                break;
+            case 11:
+                displayString = displayString.concat(" ", '* ');
+                break;
+            case 12:
+                displayString = displayString.concat("", '1');
+                break;
+            case 13:
+                displayString = displayString.concat("", '2');
+                break;
+            case 14:
+                displayString = displayString.concat("", '3');
+                break;
+            case 15:
+                displayString = displayString.concat(" ", '- ');
+                break;
+            case 16:
+                displayString = displayString.concat("", '0');
+                break;
+            case 17:
+                displayString = displayString.concat("", '.');
+                break;
+            case 18:
+                let answer = operate(displayString);
+                displayString = answer;
+                break;
+            case 19:
+                displayString = displayString.concat(" ", '+ ');
+                break;
+        }
+        display.innerHTML = displayString;
     });
 });
