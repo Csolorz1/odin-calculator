@@ -1,4 +1,4 @@
-// Calculator UI
+// Generate calculator keys
 const container = document.querySelector('#keys');
 const display = document.querySelector('#display')
 
@@ -16,7 +16,6 @@ for (let i = 0; i < (ROWS * COLUMNS); i++) {
 
 // Key Mapping
 
-// num keys 
 let para1 = document.getElementById('0');
 para1.innerHTML = '(';
 let para2 = document.getElementById('1');
@@ -60,22 +59,55 @@ addKey.innerHTML = '+';
 
 // Calculator functionality
 
+const divisionbyzero = "Error! Cannot divide by zero";
 // main operations
 function addition(a, b) {
-    var c = parseInt(a) + parseInt(b);
-    return c.toString();
+    var searchA = a.indexOf('.');
+    var searchB = b.search('.');
+    if (searchA != -1 || searchB != -1) {
+        var floatAnswer = parseFloat(a) + parseFloat(b);
+        return floatAnswer.toString();
+    }
+    else {
+        var intAnswer = parseInt(a) + parseInt(b);
+        return intAnswer.toString();
+    }
 }
 function subtraction(a, b) {
-    var c = parseInt(a) - parseInt(b);
-    return c.toString();
+    var searchA = a.indexOf('.');
+    var searchB = b.search('.');
+    if (searchA != -1 || searchB != -1) {
+        var floatAnswer = parseFloat(a) - parseFloat(b);
+        return floatAnswer.toString();
+    }
+    else {
+        var intAnswer = parseInt(a) - parseInt(b);
+        return intAnswer.toString();
+    }
 }
 function multiplication(a, b) {
-    var c = parseInt(a) * parseInt(b);
-    return c.toString();
+    var searchA = a.indexOf('.');
+    var searchB = b.search('.');
+    if (searchA != -1 || searchB != -1) {
+        var floatAnswer = parseFloat(a) * parseFloat(b);
+        return floatAnswer.toString();
+    }
+    else {
+        var intAnswer = parseInt(a) * parseInt(b);
+        return intAnswer.toString();
+    }
 }
 function division(a, b) {
-    var c = parseInt(a) / parseInt(b);
-    return c.toString();
+    var searchA = a.indexOf('.');
+    var searchB = b.search('.');
+    if (searchA != -1 || searchB != -1) {
+        var floatAnswer = parseFloat(a) / parseFloat(b);
+        return floatAnswer.toString();
+    }
+    else {
+        var intAnswer = parseInt(a) / parseInt(b);
+        return intAnswer.toString();
+    }
 }
 
 // function to solve equations
@@ -87,9 +119,8 @@ var b;
 var solution;
 function operate(operationString) {
     var variable = "";
-    // seperate into variables and operators
     for (let i = 0; i < operationString.length; i++) {
-        if (parseInt(operationString.charCodeAt(i)) >= 48) {
+        if (parseInt(operationString.charCodeAt(i)) >= 48 || parseInt(operationString.charCodeAt(i)) == 46) {
             var num = operationString[i];
             variable = variable.concat("", num);
             if (i == operationString.length - 1) {
@@ -148,7 +179,7 @@ function operate(operationString) {
 }
 
 // Display functionality 
-
+let decKeyPressed = false;
 let displayString = "";
 const squares = document.querySelectorAll('.key');
 squares.forEach((square) => {
@@ -156,15 +187,28 @@ squares.forEach((square) => {
         switch(parseInt(square.id)) {
             case 0:
                 displayString = displayString.concat("", '(');
+                if (decKeyPressed) {
+                    decKeyPressed = false;
+                }
                 break;
             case 1:
                 displayString = displayString.concat("", ')');
+                if (decKeyPressed) {
+                    decKeyPressed = false;
+                }
                 break;
             case 2:
-                displayString = displayString.concat("", ' WIP ');
+                if (displayString[displayString.length - 1] === '.') {
+                    displayString = displayString.slice(0, -1);
+                    decKeyPressed = false;
+                }
+                else {
+                    displayString = displayString.slice(0, -1)
+                }
                 break;
             case 3:
                 displayString = "";
+                decKeyPressed = false;
                 break;
             case 4:
                 displayString = displayString.concat("", '7')
@@ -177,6 +221,9 @@ squares.forEach((square) => {
                 break;
             case 7:
                 displayString = displayString.concat(" ", '/ ');
+                if (decKeyPressed) {
+                    decKeyPressed = false;
+                }
                 break;
             case 8:
                 displayString = displayString.concat("", '4');
@@ -189,6 +236,9 @@ squares.forEach((square) => {
                 break;
             case 11:
                 displayString = displayString.concat(" ", '* ');
+                if (decKeyPressed) {
+                    decKeyPressed = false;
+                }
                 break;
             case 12:
                 displayString = displayString.concat("", '1');
@@ -201,12 +251,18 @@ squares.forEach((square) => {
                 break;
             case 15:
                 displayString = displayString.concat(" ", '- ');
+                if (decKeyPressed) {
+                    decKeyPressed = false;
+                }
                 break;
             case 16:
                 displayString = displayString.concat("", '0');
                 break;
             case 17:
-                displayString = displayString.concat("", '.');
+                if (!decKeyPressed) {
+                    displayString = displayString.concat("", '.');
+                    decKeyPressed = true;
+                }
                 break;
             case 18:
                 let answer = operate(displayString);
@@ -214,6 +270,9 @@ squares.forEach((square) => {
                 break;
             case 19:
                 displayString = displayString.concat(" ", '+ ');
+                if (decKeyPressed) {
+                    decKeyPressed = false;
+                }
                 break;
         }
         display.innerHTML = displayString;
