@@ -2,7 +2,6 @@
     box-sizing: border-box;
     margin: 0;
     font-size: 24px;
-    background-color: bisque ;
 }
 :root {
     --grid-cols: 1;
@@ -21,6 +20,7 @@
     padding: 20px;
     border-radius: 11px;
     background-color: pink;
+    box-shadow: 0 9px #999;
 }
 #display {
     border: 1px solid black;
@@ -59,6 +59,13 @@
     border-radius: 12px;
     background-color: white;
     font-size: 20px
+}
+.key:hover {
+    cursor: grab;
+    opacity: .8;
+}
+.key:active {
+    transform: translateY(4px);
 }
 #logo {
     background-color: pink;
