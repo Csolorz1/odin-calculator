@@ -109,15 +109,65 @@ function division(a, b) {
         return intAnswer.toString();
     }
 }
+function solve (operatorsArray, variablesArray) {
+    var search;
+    var a;
+    var b;
+    var solution;
+    while (operatorsArray.length != 0) {
+        search = operatorsArray.indexOf('*');
+        if (search != -1) {
+            a = variablesArray[search];
+            b = variablesArray[search + 1];
+            solution = multiplication(a, b);
+            operatorsArray.splice(search, 1);
+            variablesArray[search] = solution;
+            variablesArray.splice(search + 1, 1);
+        }
+        search = operatorsArray.indexOf('/');
+        if (search != -1) {
+            a = variablesArray[search];
+            b = variablesArray[search + 1];
+            solution = division(a, b);
+            operatorsArray.splice(search, 1);
+            variablesArray[search] = solution;
+            variablesArray.splice(search + 1, 1);
+        }
+        search = operatorsArray.indexOf('+');
+        if (search != -1) {
+            a = variablesArray[search];
+            b = variablesArray[search + 1];
+            solution = addition(a, b);
+            operatorsArray.splice(search, 1);
+            variablesArray[search] = solution;
+            variablesArray.splice(search + 1, 1);
+        }
+        search = operatorsArray.indexOf('-');
+        if (search != -1) {
+            a = variablesArray[search];
+            b = variablesArray[search + 1];
+            solution = subtraction(a, b);
+            operatorsArray.splice(search, 1);
+            variablesArray[search] = solution;
+            variablesArray.splice(search + 1, 1);
+        }
+    }
+    var answer = variablesArray[0];
+    variablesArray.pop();
+    return answer;
+}
 
-// function to solve equations
-var operators = [];
-var variables = [];
-var search;
-var a;
-var b;
-var solution;
+// main function
 function operate(operationString) {
+    operationString = operationString.trim();
+    var operators = [];
+    var variables = [];
+    var subOperators = [];
+    var subVariables = [];
+    var subSolution;
+    var solution;
+    var start;
+    var end;
     var variable = "";
     for (let i = 0; i < operationString.length; i++) {
         if (parseInt(operationString.charCodeAt(i)) >= 48 || parseInt(operationString.charCodeAt(i)) == 46) {
@@ -129,52 +179,34 @@ function operate(operationString) {
         }
         else {
             if (operationString.charCodeAt(i) != 32) {
-                variables.push(variable);
-                variable = "";
+                if (operationString.charCodeAt(i) != 40 && operationString.charCodeAt(i) != 41) {
+                    variables.push(variable);
+                    variable = ""; 
+                } 
                 operators.push(operationString[i]);
             }
         }
     }
-    while (operators.length != 0) {
-        search = operators.indexOf('*');
-        if (search != -1) {
-            a = variables[search];
-            b = variables[search + 1];
-            solution = multiplication(a, b);
-            operators.splice(search, 1);
-            variables[search] = solution;
-            variables.splice(search + 1, 1);
+    // check for parenthesis and solve first
+    start = operators.indexOf('(');
+    while (start != -1) {
+        console.log(start);
+        end = operators.indexOf(')');
+        console.log(end);
+        for (let i = start + 1; i < end; i++) {
+            subOperators.push(operators[i]);
         }
-        search = operators.indexOf('/');
-        if (search != -1) {
-            a = variables[search];
-            b = variables[search + 1];
-            solution = division(a, b);
-            operators.splice(search, 1);
-            variables[search] = solution;
-            variables.splice(search + 1, 1);
+        for (let i = start; i < end; i ++) {
+            subVariables.push(variables[i]);
         }
-        search = operators.indexOf('+');
-        if (search != -1) {
-            a = variables[search];
-            b = variables[search + 1];
-            solution = addition(a, b);
-            operators.splice(search, 1);
-            variables[search] = solution;
-            variables.splice(search + 1, 1);
-        }
-        search = operators.indexOf('-');
-        if (search != -1) {
-            a = variables[search];
-            b = variables[search + 1];
-            solution = subtraction(a, b);
-            operators.splice(search, 1);
-            variables[search] = solution;
-            variables.splice(search + 1, 1);
-        }
+        subSolution = solve(subOperators, subVariables);
+        operators.splice(start, end + 1 - start);
+        variables[start] = subSolution;
+        variables.splice(start + 1, end - 1 - start);
+        start = operators.indexOf('('); 
     }
-    solution = variables[0];
-    variables.pop();
+    // solve equation
+    solution = solve(operators, variables);
     return solution;
 }
 
