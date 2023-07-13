@@ -18,19 +18,19 @@
     margin: auto;
     margin-top: 100px;
     padding: 20px;
-    border-radius: 11px;
+    border-radius: 35px;
     background-color: pink;
     box-shadow: 0 9px #999;
 }
 #display {
-    border: 1px solid black;
+    border: 2px solid black;
     height: 160px;
     width: 390px;
     margin: 10px;
     text-align: right;
     padding-right: 25px;
     padding-top: 50px;
-    margin-top: 20px;
+    margin-top: 25px;
     margin-bottom: 10px;
     background-color: white;
     border-radius: 6px;
@@ -50,15 +50,15 @@
     flex: auto;
     height: 60px;
     width: 60px;
-    border: 1px solid black;
-    padding: 17px;
+    border: 2px solid black;
+    padding: 15px;
     text-align: center;
     justify-content: center;
     align-items: center;
     margin: auto;
     border-radius: 12px;
     background-color: white;
-    font-size: 20px
+    font-size: 21px
 }
 .key:hover {
     cursor: grab;
